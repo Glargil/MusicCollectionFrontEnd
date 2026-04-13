@@ -12,6 +12,9 @@
 <body>
     <div id="app">
         <button @click="getAll" class="btn btn-primary">GetAll</button>
+        <button @click="SearchRecord(title,artist)" class="btn btn-secondary">Search</button>
+        <input v-model="title" placeholder="Title">
+        <input v-model="artist" placeholder="Artist">
         <div v-if="records.length > 0">
             <table class="table">
                 <thead>
@@ -34,6 +37,7 @@
                 </tbody>
             </table>
         </div>
+        
     </div>
     <script src="index.js"></script>
 </body>

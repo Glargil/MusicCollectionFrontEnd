@@ -20,6 +20,15 @@ getAll(){
     .catch(error => {
         console.error(error)
     })
-}
-    }    
+},
+SearchRecord(title,artist){
+    axios.get(`${baseURL}?title=${title}&artist=${artist}`)
+    .then(response => {
+        this.records = response.data
+    })
+    .catch(error => {
+        console.error(error)
+     })
+    }   
+} 
     }).mount("#app")
