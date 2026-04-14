@@ -11,6 +11,17 @@
 </head>
 <body>
     <div id="app">
+         <div v-if="!loggedIn">
+            <input v-model="auth.username" placeholder="Username" type="text">
+            <input v-model="auth.password" placeholder="Password" type="password">
+            <button @click="login">Login</button>
+            <p v-if="authMessage">{{ authMessage }}</p>
+        </div>
+        <div v-else>
+            <p>
+                Logged in as {{ auth.username }}, role: {{ role }}
+                <button @click="logout">Logout</button>
+            </p>
         <button @click="getAll" class="btn btn-primary">GetAll</button>
         <button @click="SearchRecord(title,artist)" class="btn btn-secondary">Search</button>
         <input v-model="title" placeholder="Title">
