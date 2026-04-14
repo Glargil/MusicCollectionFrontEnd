@@ -4,20 +4,21 @@ const authUrl = "https://musiccollectionrest.azurewebsites.net/api/Auth/login"
 Vue.createApp({
     data() {
         return {
-            records:[],
-            id:null,
-            title:"",
-            artist:"",
-            publicationYear:null,
-            duration:null,
-            loggedIn:false,
-            auth:{
-                username:"",
-                password:""
-             },
-             authmessage:null,
-             jwtToken:null,
-             role:null
+            records: [],
+            id: null,
+            title: "",
+            artist: "",
+            publicationYear: null,
+            duration: null,
+            loggedIn: false,
+            auth: {
+                username: "",
+                password: ""
+            },
+            authmessage: null,
+            jwtToken: null,
+            role: null,
+            newRecord: { title: "", artist: "", publicationYear: null, duration: null }
         }
     },
     methods: {
@@ -28,7 +29,7 @@ Vue.createApp({
                     this.role = response.data.role;
                     this.loggedIn = true;
                     this.authMessage = "Authentication successful";
-                    this.getAll(); 
+                    this.getAll();
                 }).catch(ex => {
                     this.authMessage = "Authentication failed - " + ex.message;
                 });
@@ -41,32 +42,46 @@ Vue.createApp({
             this.records = [];
             this.authMessage = "Logged out successfully";
         },
-getAll(){
-    axios.get(baseURL, {
-        headers: {
-            Authorization: `Bearer ${this.jwtToken}`
-        }
-    })
+        getAll() {
+            axios.get(baseURL, {
+                headers: {
+                    Authorization: `Bearer ${this.jwtToken}`
+                }
+            })
 
-    .then(response => {
-        this.records = response.data
-    })
-    .catch(error => {
-        console.error(error)
-    })
-},
-SearchRecord(title,artist){
-    axios.get(`${baseURL}?title=${title}&artist=${artist}`, {
-        headers: {
-            Authorization: `Bearer ${this.jwtToken}`
+                .then(response => {
+                    this.records = response.data
+                })
+                .catch(error => {
+                    console.error(error)
+                })
+        },
+        SearchRecord(title, artist) {
+            axios.get(`${baseURL}?title=${title}&artist=${artist}`, {
+                headers: {
+                    Authorization: `Bearer ${this.jwtToken}`
+                }
+            })
+                .then(response => {
+                    this.records = response.data
+                })
+                .catch(error => {
+                    console.error(error)
+                })
+        },
+        addRecord() {
+            axios.post(baseURL, this.newRecord, {
+                headers: {
+                    Authorization: `Bearer ${this.jwtToken}`
+                }
+            })
+                .then(response => {
+                    this.records.push(response.data);
+                    this.newRecord = { title: "", artist: "", publicationYear: null, duration: null };
+                })
+                .catch(error => {
+                    console.error(error);
+                });
         }
-    })
-    .then(response => {
-        this.records = response.data
-    })
-    .catch(error => {
-        console.error(error)
-     })
-    }
-} 
-    }).mount("#app")
+
+    }    }.mount("#app")
