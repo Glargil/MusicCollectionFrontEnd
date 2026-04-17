@@ -1,6 +1,7 @@
-const baseURL = "https://musiccollectionrest.azurewebsites.net/api/Record"
-
-const authUrl = "https://musiccollectionrest.azurewebsites.net/api/Auth/login"
+// const baseURL = "https://musiccollectionrest.azurewebsites.net/api/Record"
+// const authUrl = "https://musiccollectionrest.azurewebsites.net/api/Auth/login"
+const baseURL = "http://localhost:5170/api/Record"
+const authUrl = "http://localhost:5170/api/Auth/login"
 Vue.createApp({
     data() {
         return {
@@ -84,4 +85,4 @@ Vue.createApp({
                 });
         }
 
-    }    }.mount("#app")
+    }    }).mount("#app")

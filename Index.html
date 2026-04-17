@@ -13,13 +13,13 @@
     <div id="app">
          <div v-if="!loggedIn">
             <input v-model="auth.username" placeholder="Username" type="text">
-            <input v-model="auth.password" placeholder="Password" type="password">
+            <input @keyup.enter="login" v-model="auth.password" placeholder="Password" type="password">
             <button @click="login">Login</button>
             <p v-if="authMessage">{{ authMessage }}</p>
         </div>
         <div v-else>
             <p>
-                Logged in as {{ auth.username }}, role: {{ role }}
+                Logged in as {{ auth.username }}, role: {{ auth.role }}
                 <button @click="logout">Logout</button>
             </p>
         <button @click="getAll" class="btn btn-primary">GetAll</button>
@@ -47,6 +47,13 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+                <div v-if="role=='Admin'"></div>
+            <input v-model="newRecord.title" placeholder="New record title" type="text">
+            <input v-model="newRecord.artist" placeholder="New record artist" type="text">
+            <input v-model="newRecord.publicationYear" placeholder="New record publication year" type="number">
+            <input v-model="newRecord.duration" placeholder="New record duration" type="number">
+            <button @click="addRecord()">Add record</button>
         </div>
         
     </div>
