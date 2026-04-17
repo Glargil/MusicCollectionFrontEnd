@@ -58,7 +58,7 @@
             <hr>
 
             <input v-model.number="id" placeholder="Record ID to delete" type="number">
-            <button @click="delete(id)">Delete record</button>
+            <button @click="deleteRecord(id)">Delete record</button>
             <p v-if="deleteMessage">{{ deleteMessage }}</p>
 
             <hr>

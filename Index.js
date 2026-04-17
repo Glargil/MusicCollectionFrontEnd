@@ -1,7 +1,7 @@
-const baseURL = "https://musiccollectionrest.azurewebsites.net/api/Record"
-const authUrl = "https://musiccollectionrest.azurewebsites.net/api/Auth/login"
-// const baseURL = "http://localhost:5170/api/Record"
-// const authUrl = "http://localhost:5170/api/Auth/login"
+// const baseURL = "https://musiccollectionrest.azurewebsites.net/api/Record"
+// const authUrl = "https://musiccollectionrest.azurewebsites.net/api/Auth/login"
+const baseURL = "http://localhost:5170/api/Record"
+const authUrl = "http://localhost:5170/api/Auth/login"
 Vue.createApp({
     data() {
         return {
@@ -16,11 +16,13 @@ Vue.createApp({
                 username: "",
                 password: ""
             },
-            authmessage: null,
+            authMessage: null,
             jwtToken: null,
             role: null,
             newRecord: { title: "", artist: "", publicationYear: null, duration: null },
-            updateData: { id: null, title: "", artist: "", publicationYear: null, duration: null }
+            updateData: { id: null, title: "", artist: "", publicationYear: null, duration: null },
+            deleteMessage: null,
+            updateMessage: null
         }
     },
     methods: {
@@ -85,16 +87,20 @@ Vue.createApp({
                     console.error(error);
                 });
         },
-async delete(Id) {
+        async deleteRecord(Id) {
             if (Id === null || Id === undefined || isNaN(Id) || Id <= 0) {
                 alert("Please enter a valid record ID")
                 return
             }
             const url = baseURL + "/" + Id
             try {
-                response = await axios.delete(url)
+                const response = await axios.delete(url, {
+                    headers: {
+                        Authorization: `Bearer ${this.jwtToken}`
+                    }
+                })
                 this.deleteMessage = response.status + " " + response.statusText
-                this.getAllRecords()
+                this.getAll()
             } catch (ex) {
                 alert(ex.message)
             }
