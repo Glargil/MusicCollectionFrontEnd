@@ -25,12 +25,41 @@ Vue.createApp({
             updateMessage: null
         }
     },
+    computed: {
+        isAdmin() {
+            return String(this.role || "").toLowerCase() === "admin";
+        }
+    },
     methods: {
+        getRoleFromToken(token) {
+            if (!token) return null;
+            try {
+                const payloadBase64 = token.split(".")[1];
+                const payloadJson = atob(payloadBase64.replace(/-/g, "+").replace(/_/g, "/"));
+                const payload = JSON.parse(payloadJson);
+
+                // Support common JWT role claim names from .NET and generic issuers.
+                return (
+                    payload.role ||
+                    payload.roles?.[0] ||
+                    payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
+                    payload["https://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
+                    null
+                );
+            } catch {
+                return null;
+            }
+        },
         login() {
             axios.post(authUrl, this.auth)
                 .then(response => {
                     this.jwtToken = response.data.token;
-                    this.role = response.data.role;
+                    const roleFromResponse =
+                        response.data.role ||
+                        response.data.userRole ||
+                        response.data.roles?.[0] ||
+                        null;
+                    this.role = roleFromResponse || this.getRoleFromToken(this.jwtToken);
                     this.loggedIn = true;
                     this.authMessage = "Authentication successful";
                     this.getAll();
