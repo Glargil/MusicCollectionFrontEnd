@@ -54,6 +54,22 @@
             <input v-model="newRecord.publicationYear" placeholder="New record publication year" type="number">
             <input v-model="newRecord.duration" placeholder="New record duration" type="number">
             <button @click="addRecord()">Add record</button>
+
+            <hr>
+
+            <input v-model.number="id" placeholder="Record ID to delete" type="number">
+            <button @click="delete(id)">Delete record</button>
+            <p v-if="deleteMessage">{{ deleteMessage }}</p>
+
+            <hr>
+
+            <input v-model.number="updateData.id" placeholder="Record ID to update" type="number">
+            <input v-model="updateData.title" placeholder="Updated title" type="text">
+            <input v-model="updateData.artist" placeholder="Updated artist" type="text">
+            <input v-model.number="updateData.publicationYear" placeholder="Updated publication year" type="number">
+            <input v-model.number="updateData.duration" placeholder="Updated duration" type="number">
+            <button @click="update()">Update record</button>
+            <p v-if="updateMessage">{{ updateMessage }}</p>
         </div>
         
     </div>

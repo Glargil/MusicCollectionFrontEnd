@@ -1,7 +1,7 @@
-// const baseURL = "https://musiccollectionrest.azurewebsites.net/api/Record"
-// const authUrl = "https://musiccollectionrest.azurewebsites.net/api/Auth/login"
-const baseURL = "http://localhost:5170/api/Record"
-const authUrl = "http://localhost:5170/api/Auth/login"
+const baseURL = "https://musiccollectionrest.azurewebsites.net/api/Record"
+const authUrl = "https://musiccollectionrest.azurewebsites.net/api/Auth/login"
+// const baseURL = "http://localhost:5170/api/Record"
+// const authUrl = "http://localhost:5170/api/Auth/login"
 Vue.createApp({
     data() {
         return {
@@ -19,7 +19,8 @@ Vue.createApp({
             authmessage: null,
             jwtToken: null,
             role: null,
-            newRecord: { title: "", artist: "", publicationYear: null, duration: null }
+            newRecord: { title: "", artist: "", publicationYear: null, duration: null },
+            updateData: { id: null, title: "", artist: "", publicationYear: null, duration: null }
         }
     },
     methods: {
@@ -83,6 +84,57 @@ Vue.createApp({
                 .catch(error => {
                     console.error(error);
                 });
+        },
+async delete(Id) {
+            if (Id === null || Id === undefined || isNaN(Id) || Id <= 0) {
+                alert("Please enter a valid record ID")
+                return
+            }
+            const url = baseURL + "/" + Id
+            try {
+                response = await axios.delete(url)
+                this.deleteMessage = response.status + " " + response.statusText
+                this.getAllRecords()
+            } catch (ex) {
+                alert(ex.message)
+            }
+        },
+        update() {
+            if (this.updateData.id === null || this.updateData.id === undefined || isNaN(this.updateData.id) || this.updateData.id <= 0) {
+                this.updateMessage = "No changes made: please enter a valid id"
+                return
+            }
+
+            const RecordToUpdate = this.records.find(record => record.id === this.updateData.id)
+            if (!RecordToUpdate) {
+                this.updateMessage = "No record found with id " + this.updateData.id
+                return
+            }
+
+            const hasNewTitle = this.updateData.title !== null && this.updateData.title !== undefined && this.updateData.title.trim() !== ""
+            const hasNewArtist = this.updateData.artist !== null && this.updateData.artist !== undefined && this.updateData.artist.trim() !== ""
+            const hasNewPublicationYear = this.updateData.publicationYear !== null && this.updateData.publicationYear !== undefined && !isNaN(this.updateData.publicationYear)
+            const hasNewDuration = this.updateData.duration !== null && this.updateData.duration !== undefined && !isNaN(this.updateData.duration)
+            if (!hasNewTitle && !hasNewArtist) {
+                this.updateMessage = "No changes made: fill title and/or artist to update"
+                return
+            }
+
+            if (hasNewTitle) {
+                RecordToUpdate.title = this.updateData.title
+            }
+            if (hasNewArtist) {
+                RecordToUpdate.artist = this.updateData.artist
+            }
+            if(hasNewPublicationYear) {
+                RecordToUpdate.publicationYear = this.updateData.publicationYear
+            }
+            if(hasNewDuration) {
+                RecordToUpdate.duration = this.updateData.duration
+            }
+
+
+            this.updateMessage = "Record updated locally"
         }
 
     }    }).mount("#app")
